@@ -1,0 +1,18 @@
+{
+  "metadata": {
+    "project": "Academic Literature Reader Template",
+    "description": "Interactive literature reading, annotation, and synthesis dashboard.",
+    "exportTime": "2026-10-26T15:00:00.000Z",
+    "totalAnnotated": 1
+  },
+  "annotations": {
+    "DEMO-01": {
+      "paperId": "DEMO-01",
+      "paperTitle": "Opportunity or Exploitation? A Longitudinal Dyadic Analysis of Flexible Working Arrangements and Gender Household Labor Allocation",
+      "authors": "Senhu Wang, Cheng Cheng",
+      "year": 2023,
+      "text": "[🎯 组会必讲] [💡 支撑H1] [📐 计量模型启发]\n1. 本文使用英国 UKHLS 双对偶微观面板，识别出丈夫远程办公显著增加育儿时间，但对日常家务（做饭、洗涤）无显著影响。\n2. 计量识别中采用严格的夫妻对偶固定效应（Couple FE）吸收了时间不随变的家庭偏好，可作为计量模型构建的标准对标基准！\n3. 思考：在文化背景差异较大的样本中，传统性别规范是否会进一步抵消在宅红利？",
+      "updatedAt": "2026-10-26T15:00:00.000Z"
+    }
+  }
+}

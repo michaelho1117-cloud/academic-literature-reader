@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Academic Literature Reader · 超深度学术文献精读系统</title>
+  
+  <!-- Offline KaTeX CSS -->
+  <link rel="stylesheet" href="assets/katex.min.css">
+  
+  <!-- Reader Custom Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Top App Header -->
+  <header class="app-header">
+    <div class="header-brand">
+      <button id="sidebar-toggle-btn" class="icon-btn" title="折叠/展开左侧文献栏 (Ctrl+B)">
+        ☰
+      </button>
+      <div class="brand-icon">🎓</div>
+      <div class="brand-text">
+        <h1>Academic Literature Reader · 超深度文献精读系统</h1>
+        <p>Offline-First Interactive Literature Review, Annotation & Seminar Dashboard</p>
+      </div>
+    </div>
+
+    <!-- Global Search Input -->
+    <div class="header-search">
+      <svg class="search-icon-svg" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" id="search-input" placeholder="全局瞬时检索（著者 / 标题 / 学刊 / 假说 / 关键词...）" autocomplete="off">
+      <span class="search-badge-kbd">/</span>
+    </div>
+
+    <!-- Header Controls & Mode Switcher -->
+    <div class="header-controls">
+      <div class="mode-switcher">
+        <button id="btn-mode-subpage" class="mode-btn active" title="单篇子页面精读模式">
+          📑 单篇精读
+        </button>
+        <button id="btn-mode-slide" class="mode-btn" title="幻灯翻页卡片模式">
+          🎴 翻页卡片
+        </button>
+        <button id="btn-mode-matrix" class="mode-btn" title="横向全景矩阵对比表">
+          📊 全景矩阵
+        </button>
+      </div>
+
+      <div class="header-divider"></div>
+
+      <!-- Quick Export Notes Button -->
+      <button class="action-btn" onclick="window.litReader.exportAnnotationsJson()" title="一键导出所有文献的研读批注为 JSON 文件备份">
+        💾 导出批注
+      </button>
+
+      <!-- Font Size Scaler -->
+      <button id="font-dec-btn" class="icon-btn" title="缩小字号 (A-)">A-</button>
+      <button id="font-inc-btn" class="icon-btn" title="放大字号 (A+)">A+</button>
+
+      <!-- Theme Switcher -->
+      <button id="theme-toggle-btn" class="icon-btn" title="切换视觉主题 (明亮 / 暗夜 / 护眼)">☀️</button>
+    </div>
+  </header>
+
+  <!-- App Body Layout -->
+  <div class="app-body">
+
+    <!-- Left Filter & Paper Navigation Sidebar -->
+    <aside class="app-sidebar">
+      <div class="sidebar-filter-section">
+        <!-- Tier Filter Pills -->
+        <div class="filter-pills-row">
+          <button class="filter-pill active" data-tier="ALL">全部文献</button>
+          <button class="filter-pill" data-tier="P1">🌟 P1 核心实证</button>
+          <button class="filter-pill" data-tier="P2">💡 P2 理论机制</button>
+        </div>
+
+        <!-- Hypotheses / Topic Filter Pills -->
+        <div class="filter-pills-row">
+          <button class="filter-pill active" data-hyp="ALL">全部主题</button>
+          <button class="filter-pill" data-hyp="H1">H1 假说</button>
+          <button class="filter-pill" data-hyp="H2">H2 假说</button>
+          <button class="filter-pill" data-hyp="H3">H3 假说</button>
+        </div>
+
+        <!-- Quick Bookmarks & Stats -->
+        <div class="sidebar-stats-row">
+          <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+            <button class="filter-pill" data-quick="starred">⭐ 收藏</button>
+            <button class="filter-pill" data-quick="unread">⌛ 未读</button>
+            <button class="filter-pill" data-quick="annotated">✍️ 批注</button>
+          </div>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span id="paper-count-badge" style="font-weight: 600;">2 / 2</span>
+            <select id="sort-select" class="sort-select">
+              <option value="default">默认序号</option>
+              <option value="score_desc">评分从高到低</option>
+              <option value="year_desc">年份从新到旧</option>
+              <option value="citations_desc">被引频次从高到低</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scrollable Paper List -->
+      <div id="sidebar-paper-list" class="sidebar-paper-list">
+        <!-- Dynamic Cards rendered by app.js -->
+      </div>
+    </aside>
+
+    <!-- Main Content Display -->
+    <main class="app-content">
+
+      <!-- Sticky Top Reader Action Bar -->
+      <div class="reader-nav-bar">
+        <div class="nav-paging-group">
+          <button id="btn-prev-paper" class="nav-btn" title="快捷键: ← 或 A">
+            ◀ 上一篇 (A)
+          </button>
+          <select id="paper-jump-select" class="nav-select-jump">
+            <!-- Dynamic Jump Options -->
+          </select>
+          <button id="btn-next-paper" class="nav-btn" title="快捷键: → 或 D">
+            下一篇 (D) ▶
+          </button>
+          <div style="display: flex; gap: 4px; margin-left: 6px; border-left: 1px solid var(--border-color); padding-left: 8px;">
+            <button class="nav-btn" onclick="window.litReader.scrollPage(-0.75)" title="页面向上滚动半屏 (PageUp / K)">
+              ▲ 上翻
+            </button>
+            <button class="nav-btn" onclick="window.litReader.scrollPage(0.75)" title="页面向下滚动半屏 (PageDown / J / 空格)">
+              ▼ 下翻
+            </button>
+          </div>
+        </div>
+
+        <div class="nav-actions-group">
+          <button id="btn-star-paper" class="action-btn" title="快捷键: S">
+            ⭐ 收藏
+          </button>
+          <button id="btn-read-paper" class="action-btn" title="快捷键: R">
+            ✅ 标为已读
+          </button>
+          <button id="btn-copy-apa" class="action-btn" title="复制标准 APA 7th 参考文献条目">
+            📋 复制 APA
+          </button>
+          <button id="btn-copy-bib" class="action-btn" title="复制完整 BibTeX 引用代码">
+            📋 复制 BibTeX
+          </button>
+          <button class="action-btn" onclick="window.print()" title="打印或保存为 PDF">
+            🖨️ 打印
+          </button>
+        </div>
+      </div>
+
+      <!-- View 1: Subpage Mode Container (Default) -->
+      <div id="view-subpage" style="display: block; width: 100%;">
+        <div id="article-content-container" class="reader-article-container">
+          <!-- Rendered dynamically by app.js -->
+        </div>
+      </div>
+
+      <!-- View 2: Slide Flip Card Mode -->
+      <div id="view-slide" style="display: none; width: 100%;">
+        <div id="slide-content-container">
+          <!-- Rendered dynamically by app.js -->
+        </div>
+      </div>
+
+      <!-- View 3: Master Matrix View Mode -->
+      <div id="view-matrix" style="display: none; width: 100%;">
+        <div id="matrix-content-container">
+          <!-- Rendered dynamically by app.js -->
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Hidden File Input for Importing Annotations JSON -->
+  <input type="file" id="import-annotation-file-input" accept=".json,application/json" style="display:none;" onchange="window.litReader.handleAnnotationFileImport(event)">
+
+  <!-- Floating Page-Scroll Buttons (For mouse without scroll wheel / quick scrolling) -->
+  <div class="floating-scroll-widget">
+    <button class="scroll-fab-btn" onclick="window.litReader.scrollPage(-0.75)" title="向上翻半页 (PageUp / K)">
+      ▲ 上翻半页
+    </button>
+    <button class="scroll-fab-btn" onclick="window.litReader.scrollPage(0.75)" title="向下翻半页 (PageDown / J / 空格)">
+      ▼ 下翻半页
+    </button>
+    <button class="scroll-fab-btn" onclick="window.litReader.scrollToTop()" title="返回顶部 (Home)">
+      🔝 回到顶部
+    </button>
+  </div>
+
+  <!-- Toast Notification Popup -->
+  <div id="toast-notice" class="toast-notice">已完成操作</div>
+
+  <!-- Offline Vendor Scripts -->
+  <script src="assets/marked.min.js"></script>
+  <script src="assets/katex.min.js"></script>
+  <script src="assets/auto-render.min.js"></script>
+
+  <!-- Offline Literature Dataset -->
+  <script src="data/papers_data.js"></script>
+
+  <!-- Reader Controller Script -->
+  <script src="app.js"></script>
+
+</body>
+</html>

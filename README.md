@@ -6,6 +6,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Zero Dependency](https://img.shields.io/badge/Server-Zero%20Dependency%20(Pure%20Local)-green.svg)](index.html)
 [![KaTeX](https://img.shields.io/badge/Math-KaTeX%20Offline-orange.svg)](assets/katex.min.js)
+[![GitHub Pages](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-brightgreen.svg)](https://michaelho1117-cloud.github.io/academic-literature-reader/)
+
+🌐 **Live Demo 线上在线体验**: [https://michaelho1117-cloud.github.io/academic-literature-reader/](https://michaelho1117-cloud.github.io/academic-literature-reader/)
 
 ---
 
